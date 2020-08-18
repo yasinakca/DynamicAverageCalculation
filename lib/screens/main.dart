@@ -13,11 +13,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.teal,
+        accentColor: Colors.deepOrangeAccent
+      ),
       routes: {
         "/" : (context) => Home(),
         "/notHesapla" : (context) => NotHesapla()
       },
-      initialRoute: "/notHesapla",
+      initialRoute: "/",
     );
   }
 }

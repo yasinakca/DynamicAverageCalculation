@@ -37,7 +37,8 @@ class _NotHesaplaState extends State<NotHesapla> {
         onPressed: () {
           if (formKey.currentState.validate()) {
             formKey.currentState.save();
-            tumDersler.add(Ders(dersAdi, dersKredi, dersHarfDegeri));
+            tumDersler
+                .add(Ders(dersAdi, dersKredi, dersHarfDegeri, rastgeleRenk()));
             ortalama = 0;
             ortalamaHesapla();
           }
@@ -50,81 +51,90 @@ class _NotHesaplaState extends State<NotHesapla> {
             Container(
                 //color: Colors.pink.shade200,
                 child: Container(
-                  padding: EdgeInsets.all(20),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Ders Adi",
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                      ),
+                      validator: (value) {
+                        if (value.length > 0) {
+                          return null;
+                        } else {
+                          return "Ders adi bos birakilamaz";
+                        }
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          dersAdi = value;
+                        });
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Ders Adi",
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                                items: dersKredirediItems(),
+                                value: dersKredi,
+                                onChanged: (value) {
+                                  setState(() {
+                                    dersKredi = value;
+                                  });
+                                }),
                           ),
-                          validator: (value) {
-                            if (value.length > 0) {
-                              return null;
-                            } else {
-                              return "Ders adi bos birakilamaz";
-                            }
-                          },
-                          onSaved: (value) {
-                            setState(() {
-                              dersAdi = value;
-                            });
-                          },
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: DropdownButton(
-                                  items: dersKredirediItems(),
-                                  value: dersKredi,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      dersKredi = value;
-                                    });
-                                  }),
-                            ),
-                            Container(
-                              child: DropdownButton(
-                                  items: dersHarfDegeriItems(),
-                                  value: dersHarfDegeri,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      dersHarfDegeri = value;
-                                    });
-                                  }),
-                            )
-                          ],
-                        ),
-                        RichText(
-                          text: TextSpan(children: [
-                            TextSpan(
-                                text: tumDersler.length == 0 ? "Lutfen ders ekleyin" : "Ortalama ",
-                                style: TextStyle(fontSize: 18,color: Colors.black)),
-                            TextSpan(
-                                text: tumDersler.length == 0 ? " " : "${ortalama.toStringAsPrecision(2)}",
-                                style: TextStyle(fontSize: 18,color: Colors.black))
-                          ]),
-                          textAlign: TextAlign.center,
+                        Container(
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                                items: dersHarfDegeriItems(),
+                                value: dersHarfDegeri,
+                                onChanged: (value) {
+                                  setState(() {
+                                    dersHarfDegeri = value;
+                                  });
+                                }),
+                          ),
                         )
                       ],
                     ),
-                  ),
-                )),
+                    RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                            text: tumDersler.length == 0
+                                ? "Lutfen ders ekleyin"
+                                : "Ortalama ",
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.black)),
+                        TextSpan(
+                            text: tumDersler.length == 0
+                                ? " "
+                                : "${ortalama.toStringAsPrecision(2)}",
+                            style: TextStyle(fontSize: 18, color: Colors.black))
+                      ]),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            )),
             Expanded(
               child: Container(
                   //color: Colors.green.shade200,
                   child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return buildList(context, index);
-                    },
-                    itemCount: tumDersler.length,
-                  )),
+                itemBuilder: (context, index) {
+                  return buildList(context, index);
+                },
+                itemCount: tumDersler.length,
+              )),
             )
           ],
         ),
@@ -204,22 +214,31 @@ class _NotHesaplaState extends State<NotHesapla> {
         });
       },
       child: Card(
-        color: rastgeleRenk(),
+        color: tumDersler[index].renk,
         child: ListTile(
-          leading: Icon(Icons.book,color: Colors.white,),
-          title: Text(tumDersler[index].ad,style: TextStyle(color: Colors.white),),
-          subtitle: Text("Ders Kredi: " +
-              tumDersler[index].kredi.toString() +
-              " " +
-              "Harf Degeri: " +
-              tumDersler[index].harfDegeri.toString(),style: TextStyle(color: Colors.white),),
-          trailing: Icon(Icons.delete)
-        ),
+            leading: Icon(
+              Icons.book,
+              color: Colors.white,
+            ),
+            title: Text(
+              tumDersler[index].ad,
+              style: TextStyle(color: Colors.white),
+            ),
+            subtitle: Text(
+              "Ders Kredi: " +
+                  tumDersler[index].kredi.toString() +
+                  " " +
+                  "Harf Degeri: " +
+                  tumDersler[index].harfDegeri.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+            trailing: Icon(Icons.delete)),
       ),
     );
   }
 
   Color rastgeleRenk() {
-    return Color.fromARGB(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), Random().nextInt(255));
+    return Color.fromARGB(Random().nextInt(255), Random().nextInt(255),
+        Random().nextInt(255), Random().nextInt(255));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dinamikortalamahesaplama/models/ders.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class NotHesapla extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _NotHesaplaState extends State<NotHesapla> {
       ),
       resizeToAvoidBottomPadding: false,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
+        child: Icon(Icons.add),
         onPressed: () {
           if (formKey.currentState.validate()) {
             formKey.currentState.save();
@@ -47,7 +48,7 @@ class _NotHesaplaState extends State<NotHesapla> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
-                color: Colors.pink.shade200,
+                //color: Colors.pink.shade200,
                 child: Container(
                   padding: EdgeInsets.all(20),
                   child: Form(
@@ -104,10 +105,10 @@ class _NotHesaplaState extends State<NotHesapla> {
                           text: TextSpan(children: [
                             TextSpan(
                                 text: tumDersler.length == 0 ? "Lutfen ders ekleyin" : "Ortalama ",
-                                style: TextStyle(fontSize: 18)),
+                                style: TextStyle(fontSize: 18,color: Colors.black)),
                             TextSpan(
                                 text: tumDersler.length == 0 ? " " : "${ortalama.toStringAsPrecision(2)}",
-                                style: TextStyle(fontSize: 18))
+                                style: TextStyle(fontSize: 18,color: Colors.black))
                           ]),
                           textAlign: TextAlign.center,
                         )
@@ -203,15 +204,22 @@ class _NotHesaplaState extends State<NotHesapla> {
         });
       },
       child: Card(
+        color: rastgeleRenk(),
         child: ListTile(
-          title: Text(tumDersler[index].ad),
+          leading: Icon(Icons.book,color: Colors.white,),
+          title: Text(tumDersler[index].ad,style: TextStyle(color: Colors.white),),
           subtitle: Text("Ders Kredi: " +
               tumDersler[index].kredi.toString() +
               " " +
               "Harf Degeri: " +
-              tumDersler[index].harfDegeri.toString()),
+              tumDersler[index].harfDegeri.toString(),style: TextStyle(color: Colors.white),),
+          trailing: Icon(Icons.delete)
         ),
       ),
     );
+  }
+
+  Color rastgeleRenk() {
+    return Color.fromARGB(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), Random().nextInt(255));
   }
 }

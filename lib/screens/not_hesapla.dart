@@ -117,7 +117,7 @@ class _NotHesaplaState extends State<NotHesapla> {
                 )),
             Expanded(
               child: Container(
-                  color: Colors.green.shade200,
+                  //color: Colors.green.shade200,
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       return buildList(context, index);

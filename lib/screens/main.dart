@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
         "/" : (context) => Home(),
         "/notHesapla" : (context) => NotHesapla()
       },
-      initialRoute: "/",
+      initialRoute: "/notHesapla",
     );
   }
 }

@@ -28,118 +28,29 @@ class _NotHesaplaState extends State<NotHesapla> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Hesap Sayfasi"),
-      ),
-      resizeToAvoidBottomPadding: false,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          if (formKey.currentState.validate()) {
-            formKey.currentState.save();
-            tumDersler
-                .add(Ders(dersAdi, dersKredi, dersHarfDegeri, rastgeleRenk()));
-            ortalama = 0;
-            ortalamaHesapla();
-          }
-        },
-      ),
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-                //color: Colors.pink.shade200,
-                child: Container(
-              padding: EdgeInsets.all(20),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Ders Adi",
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                      ),
-                      validator: (value) {
-                        if (value.length > 0) {
-                          return null;
-                        } else {
-                          return "Ders adi bos birakilamaz";
-                        }
-                      },
-                      onSaved: (value) {
-                        setState(() {
-                          dersAdi = value;
-                        });
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                                items: dersKredirediItems(),
-                                value: dersKredi,
-                                onChanged: (value) {
-                                  setState(() {
-                                    dersKredi = value;
-                                  });
-                                }),
-                          ),
-                        ),
-                        Container(
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                                items: dersHarfDegeriItems(),
-                                value: dersHarfDegeri,
-                                onChanged: (value) {
-                                  setState(() {
-                                    dersHarfDegeri = value;
-                                  });
-                                }),
-                          ),
-                        )
-                      ],
-                    ),
-                    RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: tumDersler.length == 0
-                                ? "Lutfen ders ekleyin"
-                                : "Ortalama ",
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.black)),
-                        TextSpan(
-                            text: tumDersler.length == 0
-                                ? " "
-                                : "${ortalama.toStringAsPrecision(2)}",
-                            style: TextStyle(fontSize: 18, color: Colors.black))
-                      ]),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              ),
-            )),
-            Expanded(
-              child: Container(
-                  //color: Colors.green.shade200,
-                  child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return buildList(context, index);
-                },
-                itemCount: tumDersler.length,
-              )),
-            )
-          ],
+        appBar: AppBar(
+          title: Text("Hesap Sayfasi"),
         ),
-      ),
-    );
+        resizeToAvoidBottomPadding: false,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            if (formKey.currentState.validate()) {
+              formKey.currentState.save();
+              tumDersler.add(
+                  Ders(dersAdi, dersKredi, dersHarfDegeri, rastgeleRenk()));
+              ortalama = 0;
+              ortalamaHesapla();
+            }
+          },
+        ),
+        body: OrientationBuilder(builder: (context, orientation) {
+          if (orientation == Orientation.portrait) {
+            return buildBody();
+          } else {
+            return buildBodyLandscape();
+          }
+        }));
   }
 
   List<DropdownMenuItem<int>> dersKredirediItems() {
@@ -240,5 +151,199 @@ class _NotHesaplaState extends State<NotHesapla> {
   Color rastgeleRenk() {
     return Color.fromARGB(Random().nextInt(255), Random().nextInt(255),
         Random().nextInt(255), Random().nextInt(255));
+  }
+
+  Widget buildBody() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+              //color: Colors.pink.shade200,
+              child: Container(
+            padding: EdgeInsets.all(20),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Ders Adi",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                    validator: (value) {
+                      if (value.length > 0) {
+                        return null;
+                      } else {
+                        return "Ders adi bos birakilamaz";
+                      }
+                    },
+                    onSaved: (value) {
+                      setState(() {
+                        dersAdi = value;
+                      });
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                              items: dersKredirediItems(),
+                              value: dersKredi,
+                              onChanged: (value) {
+                                setState(() {
+                                  dersKredi = value;
+                                });
+                              }),
+                        ),
+                      ),
+                      Container(
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                              items: dersHarfDegeriItems(),
+                              value: dersHarfDegeri,
+                              onChanged: (value) {
+                                setState(() {
+                                  dersHarfDegeri = value;
+                                });
+                              }),
+                        ),
+                      )
+                    ],
+                  ),
+                  RichText(
+                    text: TextSpan(children: [
+                      TextSpan(
+                          text: tumDersler.length == 0
+                              ? "Lutfen ders ekleyin"
+                              : "Ortalama ",
+                          style: TextStyle(fontSize: 18, color: Colors.black)),
+                      TextSpan(
+                          text: tumDersler.length == 0
+                              ? " "
+                              : "${ortalama.toStringAsPrecision(2)}",
+                          style: TextStyle(fontSize: 18, color: Colors.black))
+                    ]),
+                    textAlign: TextAlign.center,
+                  )
+                ],
+              ),
+            ),
+          )),
+          Expanded(
+            child: Container(
+                //color: Colors.green.shade200,
+                child: ListView.builder(
+              itemBuilder: (context, index) {
+                return buildList(context, index);
+              },
+              itemCount: tumDersler.length,
+            )),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildBodyLandscape() {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              //color: Colors.pink.shade200,
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Ders Adi",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                          ),
+                          validator: (value) {
+                            if (value.length > 0) {
+                              return null;
+                            } else {
+                              return "Ders adi bos birakilamaz";
+                            }
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              dersAdi = value;
+                            });
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                    items: dersKredirediItems(),
+                                    value: dersKredi,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        dersKredi = value;
+                                      });
+                                    }),
+                              ),
+                            ),
+                            Container(
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                    items: dersHarfDegeriItems(),
+                                    value: dersHarfDegeri,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        dersHarfDegeri = value;
+                                      });
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
+                        RichText(
+                          text: TextSpan(children: [
+                            TextSpan(
+                                text: tumDersler.length == 0
+                                    ? "Lutfen ders ekleyin"
+                                    : "Ortalama ",
+                                style: TextStyle(fontSize: 18, color: Colors.black)),
+                            TextSpan(
+                                text: tumDersler.length == 0
+                                    ? " "
+                                    : "${ortalama.toStringAsPrecision(2)}",
+                                style: TextStyle(fontSize: 18, color: Colors.black))
+                          ]),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                )),
+          ),
+          Expanded(
+            child: Container(
+              //color: Colors.green.shade200,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return buildList(context, index);
+                  },
+                  itemCount: tumDersler.length,
+                )),
+          )
+        ],
+      ),
+    );
   }
 }
